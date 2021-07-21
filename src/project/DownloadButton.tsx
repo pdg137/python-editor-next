@@ -9,6 +9,8 @@ import { useIntl } from "react-intl";
 import CollapsableButton, {
   CollapsibleButtonProps,
 } from "../common/CollapsibleButton";
+import { ConnectionStatus } from "../device/device";
+import { useConnectionStatus } from "../device/device-hooks";
 import { useProjectActions } from "./project-hooks";
 
 interface DownloadButtonProps
@@ -24,6 +26,8 @@ interface DownloadButtonProps
  */
 const DownloadButton = (props: DownloadButtonProps) => {
   const actions = useProjectActions();
+  const status = useConnectionStatus();
+  const supported = status !== ConnectionStatus.NOT_SUPPORTED;
   const intl = useIntl();
   return (
     <Tooltip
@@ -35,7 +39,7 @@ const DownloadButton = (props: DownloadButtonProps) => {
     >
       <CollapsableButton
         {...props}
-        variant="solid"
+        variant={!supported ? "solid" : "outline"}
         icon={<RiDownload2Line />}
         onClick={actions.download}
         text={intl.formatMessage({

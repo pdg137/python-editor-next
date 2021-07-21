@@ -34,8 +34,9 @@ interface DownloadFlashButtonProps {
  * flash (if WebUSB is supported) or otherwise just download a HEX.
  */
 const DownloadFlashButton = ({ size }: DownloadFlashButtonProps) => {
-  const connectionStatus = useConnectionStatus();
-  const connected = connectionStatus === ConnectionStatus.CONNECTED;
+  const status = useConnectionStatus();
+  const connected = status === ConnectionStatus.CONNECTED;
+  const supported = status !== ConnectionStatus.NOT_SUPPORTED;
   const actions = useProjectActions();
   const buttonWidth = "10rem"; // 8.1 with md buttons
   return (
@@ -48,7 +49,7 @@ const DownloadFlashButton = ({ size }: DownloadFlashButtonProps) => {
             <DownloadButton width={buttonWidth} mode={"button"} size={size} />
           )}
           <MenuButton
-            variant="solid"
+            variant={connected || !supported ? "solid" : "outline"}
             borderLeft="1px"
             borderRadius="button"
             as={IconButton}
